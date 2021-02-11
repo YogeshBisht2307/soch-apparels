@@ -1,0 +1,113 @@
+{% extends 'store/layout.html' %}
+{% load cloth_tags %}
+{% load static %}
+{% block title %} {{cloth.cloth_name}} {% endblock %}
+
+{% block body %}
+<section>
+ <div class="container product_detail">
+     <div class="row">
+         <div class="col-lg-6 col-sm-12 product_image">
+            <div class="main_image text-center mx-auto w-75">
+                <img src="{{cloth.cloth_image.url}}" class="img-fluid">
+            </div>
+         </div>
+         <div class="col-lg-6 col-sm-12 product_data">
+             <div class="display-4">{{cloth.cloth_name}}</div>
+             <div class="row">
+                 <div class="col size_detail">
+                     <div class="price">
+                        <span class="text-danger"><del>{{price|rupee}}</del></span>
+                         <span>{{sale_price|rupee}}</span>
+                     </div>
+                    <label for=""><h4>Select Size</h4></label>
+                    <div class="row">
+                        {% for size in cloth.size_variant_set.all %}
+
+                            <div class="col-4 cloth__size">
+                                <a href="/product_detail/{{cloth.cloth_slug}}?size={{size.size}}"class="{% active_size_class active_size size %} btn btn-block">{{size.size}}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="display-5 border badge badge-info">
+                        Save {{cloth.cloth_discount}}%
+                    </div>
+                 </div>
+                 <div class="col product_detail_button">
+                     <div class="p-2">
+                         <a href="/addtocart/{{cloth.cloth_slug}}/{{active_size.size}}?return_url={{request.get_full_path}}" class="btn btn-block addCart border">Add Cart</a>
+                         <a href="/buy/?slug={{cloth.cloth_slug}}&size={{active_size.size}}" class="btn btn-block addCart border">Buy Now</a>
+                     </div>
+                 </div>
+                 <div class="prduct_detail pl-4">
+                     <h2>Product Detail</h2>
+                    <p>{{cloth.cloth_description}}</p>
+                 </div>
+
+             </div>
+         </div>
+     </div>
+ </div>
+</section>
+  <!-- Related -->
+  <section class="section">
+    <div class="related_product container">
+        <div class="title">
+        <h1 class="primary__title">Related Cloths</h1>
+        </div>
+        <div class="related__center">
+            {% for cloth in related_cloths %}
+
+            <div class="product h-100  w-100 border rounded ">
+                <div class="img__container">
+                  <img src="{{cloth.cloth_image.url}}" alt="" />
+                </div>
+                <div class="product__bottom">
+                  <div class="price">
+                      <span class="text-danger"> <del>{% min_price cloth as result %}  {{ result|rupee }}</del></span>&nbsp;
+                      <span>{% discount_price cloth as result %}  {{result|rupee}}</span>
+                      <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
+                  </div>
+                  <h3 class="p-4">{{cloth.cloth_name}}</h3>
+                  <div class="button">
+                      <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block">See More</a>
+                  </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+  <!--Comment Section-->
+  <section id="comment">
+    <div class="container">
+      <div class="comment_drop text-center mt-5 mb-3">
+        {% if request.user.is_authenticated %}
+        <form action="/comments/" method="POST">
+          {% csrf_token %}
+          <h3>Enter Your Comment & views here</h3>
+          <input type="hidden" name="return_url" value="{{request.get_full_path}}">
+          <input type="hidden" name="cloth_slug" value="{{cloth.cloth_slug}}">
+          <input type="text" name="comment" class="mt-5 mb-5 mx-auto" placeholder="Enter Your Comment or View">
+            <button class="btn btn-lg p-3 btn-danger" type="submit" value="submit">Submit</button>
+        </form>
+        {% else %}
+        <h3>Customer Reviews & Comment</h3>
+        {% endif %}
+      </div>
+
+      <div class="comment_content">
+        {% for comment in comments %}
+        <div class="media mt-5">
+          <img class="mr-3" src="{% static 'store/user.png' %}" alt="Generic placeholder image">
+          <div class="media-body">
+            <h5 class="mt-0">{{comment.user.first_name}}</h5>
+            {{comment.comment}}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

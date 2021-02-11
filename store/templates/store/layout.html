@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load cloth_tags %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!-- Glidejs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{%static 'store/style.css' %}" />
+  <link rel="shortcut icon" href="{%  faviconIcon  %}" />
+
+  <title>{% block title %} {% endblock %}</title>
+</head>
+
+<body>
+  <div class="navigation nav_color">
+    <div class="container">
+      <nav class="nav__center">
+        <div class="nav__header">
+          <div class="nav__logo">
+            <h1><span></span>{% get_name %}<span></span></h1>
+          </div>
+
+          <div class="nav__hamburger">
+            <span>
+              <i class="fas fa-bars" aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="nav__menu">
+          <div class="menu__top">
+            <h1 class="nav__category">{% get_name %}</h1>
+            <div class="close__toggle">
+              <i class="fas fa-cross" aria-hidden="true"></i>
+            </div>
+          </div>
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a href="/" class="nav__link">Home</a>
+            </li>
+
+            <li class="nav__item">
+              <a href="/store" class="nav__link">Shop</a>
+            </li>
+
+            <li class="nav__item">
+              <a href="/cart" class="nav__link">Cart</a>
+            </li>
+
+            <li class="nav__item">
+              <a href="/contact" class="nav__link ">Contact</a>
+            </li>
+            <!--Showing and hidding the button on user logIn and logOut-->
+            {% if request.user.is_authenticated %}
+            <li class="nav__item">
+              <a href="/orders" class="nav__link">Orders</a>
+            </li>
+            <li class="nav__item">
+              <a href="/logout" class="nav__link">Logout</a>
+            </li>
+
+
+            {% else %}
+
+            <li class="nav__item">
+              <a href="/login" class="nav__link">Login</a>
+            </li>
+            <li class="nav__item">
+              <a href="/registration" class="nav__link">Register</a>
+            </li>
+
+            {% endif %}
+          </ul>
+
+          <ul class="nav__icons">
+              {% if request.user.is_authenticated %}
+              <h3  class="text-white mr-3">{{request.user.first_name}}</h3>
+              {% endif %}
+            <a href="/cart" class="icon__item">
+              <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+              <span id="cart">{{request.session.cart|length}}</span>
+            </a>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  {% block body %} {% endblock %}
+
+   <!-- Footer -->
+   <footer id="footer" class="section footer">
+    <div class="container">
+        <div class="footer__top">
+            <div class="footer-top__box">
+                <h3>INFORMATION</h3>
+                <a href="/about">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="/contact">Contact Us</a>
+            </div>
+            <div class="footer-top__box">
+                <h3>MY ACCOUNT</h3>
+                <a href="/login">Login</a>
+                <a href="/registration">Signup</a>
+                <a href="/orders">Order History</a>
+                <a href="/cart">Cart</a>
+            </div>
+            <div class="footer-top__box">
+                <h3>CONTACT US</h3>
+                <div>
+                    <span>
+                        <i class="fas fa-map-marker-alt"></i>
+                    </span>
+                    {% get_address %}
+                </div>
+                <div>
+                    <span>
+                        <i class="far fa-envelope"></i>
+                    </span>
+                    {% get_email_1 %}
+                </div>
+                <div>
+                    <span>
+                        <i class="fas fa-phone-square-alt"></i>
+                    </span>
+                    {% get_mobile_1 %}
+                </div>
+                <div>
+                    <span>
+                        <i class="far fa-address-card"></i>
+                    </span>
+                    {% get_city %}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>
+<!-- End Footer -->
+
+  <!-- Glidejs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Script -->
+  <script src="{%static 'store/js/main.js' %}"></script>
+</body>
+
+</html>

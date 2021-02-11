@@ -1,0 +1,21 @@
+{% extends 'store/layout.html' %}
+{% load crispy_forms_tags %}
+{% block title %} SochApparels | Registration {% endblock %}
+
+{% block body %}
+<div class="col-lg-4 mx-auto border rounded p-5 mb-5 mt-4">
+    <form action="/registration/" method="POST">
+        {% csrf_token %}
+        <h1 class="display-4 mt-4 mb-4">Create Account</h1>
+
+        {{form|crispy}}
+
+        <div class="form-group">
+        <input type="submit"  id="" class="btn btn-info" value="Create Account">
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}

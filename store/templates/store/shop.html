@@ -1,0 +1,143 @@
+{% extends 'store/layout.html' %}
+{% load cloth_tags %}
+{% block title %} SochApparels Store : Best Clothing Store of Delhi {% endblock %}
+{% block body %}
+
+<section class="section">
+    <div class="store container">
+        <div class="title">
+            <h1 class="primary__title">Soch Apparels Store</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-2 col-sm-12 col-12 container mt-5">
+                <h2><span>Filters</span></h2>
+                <form id="filterform" action="/store">
+                    <div class="mt-5">
+                    <!--Category-->
+                    <div class="form-group ">
+                        <label for="category">Category</label>
+                        <select onchange="submitForm()" name="category" class="form-control " id="category">
+                          <option value="">Select Category</option>
+                          {% for category in categories %}
+                          <option
+                           {% selected_attr request.GET.category category.slug %}
+                          value="{{category.slug}}">{{category.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <!--Subcategory-->
+                    <div class="form-group">
+                        <label for="sub_category">Sub-Category</label>
+                        <select onchange="submitForm()" name="sub_category" class="form-control" id="sub_category">
+                          <option value="">Select Sub_Category</option>
+                          {% for sub_category in sub_categories %}
+                          <option
+                          {% selected_attr request.GET.sub_category sub_category.slug %}
+                          value="{{sub_category.slug}}">{{sub_category.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <!--Ocassion-->
+                    <div class="form-group">
+                        <label for="occasion">Occassions</label>
+                        <select onchange="submitForm()" name="occasion" class="form-control" id="Ocassion">
+                          <option value="">Select Occasion</option>
+                          {% for occasion in occassions %}
+                          <option
+                          {% selected_attr request.GET.occasion occasion.slug %}
+                          value="{{occasion.slug}}">{{occasion.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <!--Brands-->
+                    <div class="form-group">
+                        <label for="brands">Brand</label>
+                        <select onchange="submitForm()" name="brand" class="form-control" id="brands">
+                          <option value="">Select Brand</option>
+                          {% for brand in brands %}
+                          <option
+                          {% selected_attr request.GET.brand brand.slug %}
+                          value="{{brand.slug}}">{{brand.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <!--color -->
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <select onchange="submitForm()" name="color" class="form-control" id="color">
+                          <option value="">Select Color</option>
+                          {% for color in colors %}
+                          <option
+                          {% selected_attr request.GET.color color.slug %}
+                          value="{{color.slug}}">{{color.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+                <a href="/store" class="filter btn">Clear Filter</a>
+
+            </form>
+            </div>
+
+            <div class="col-lg-10 col-md-10 mx-auto col-sm-12 col-12">
+                <div class="store__center">
+                    {% if page_object %}
+                    {% for cloth in page_object %}
+                    <div class="product h-100  w-100 border rounded ">
+                        <div class="img__container">
+                            <img src="{{cloth.cloth_image.url}}" alt="" />
+                        </div>
+                        <div class="product__bottom">
+                            <div class="price">
+                                <span class="text-danger"> <del>{% min_price cloth as result %} {{ result|rupee}}</del></span>&nbsp;
+                                <span>{% discount_price cloth as result %} {{result|rupee}}</span>
+                                <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
+                            </div>
+                            <h3 class="p-4">{{cloth.cloth_name}}</h3>
+                            <div class="button">
+                                <a href="/product_detail/{{cloth.cloth_slug}}" target="_blank" class="btn-block">See More</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                        {% if page_object.has_previous %}
+                            <li  class="page-item">
+                                <a class="page-link" href="?{{pageurl}}1">first</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?{{pageurl}}{{ page_object.previous_page_number }}">&laquo;</a>
+                            </li>
+                        {% endif %}
+
+
+                        <li class="page-item active">
+                            <a href="" class="page-link"> Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}.</a>
+                        </li>
+
+
+                        {% if page_object.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{pageurl}}{{ page_object.next_page_number }}">&raquo;</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"  href="?{{pageurl}}{{ page_object.paginator.num_pages }}">last</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                </div>
+            </div>
+            {% else %}
+            <div class = "no-product">
+                <h3>No Product, Choose another filter!.....</h3>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

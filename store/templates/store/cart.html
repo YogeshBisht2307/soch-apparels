@@ -1,0 +1,57 @@
+{% extends 'store/layout.html' %}
+{% load cloth_tags %}
+{% block title %}SochApparels Shopping Cart {% endblock %}
+
+{% block body %}
+
+ <!-- Cart Items -->
+ <div class="container mt-5 cart">
+    <h1 class="primaryCart__title">My Cart</h1>
+    {% if cart %}
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Size</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+      {% for c in cart %}
+      <tr>
+        <td>
+          <div class="cart-info">
+            <img height="70px" class="rounded-circle" src="{{c.cloth.cloth_image.url}}" alt="">
+            <div>
+              <a href="/product_detail/{{c.cloth.cloth_slug}}"><p>{{c.cloth}}</p></a>
+              <span>Price:- {% calculate_sale_price c.size.price c.cloth.cloth_discount as sale_price %}{{sale_price|rupee}}</span>
+              <br/>
+              <a href="/removecart/{{c.cloth.cloth_slug}}/{{c.size.size}}?return_url={{request.get_full_path}}">remove</a>
+            </div>
+          </div>
+        </td>
+        <td>{{c.size.size}}</td>
+        <td>{{c.quantity}}</td>
+        <td>{% multiply c.quantity sale_price as total %}{{total|rupee}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <div class="total-price">
+      <table>
+        <tr>
+          <td>Subtotal</td>
+          <td>{{cart|total_payable_amount|rupee}}</td>
+        </tr>
+      </table>
+      <a href="/checkout"  class="checkout btn">Proceed To Checkout</a>
+
+    </div>
+    {% else %}
+    <div class="no-cart">
+      <h3>You did'nt add anything in the Cart!......</h3>
+    </div>
+    {% endif %}
+
+  </div>
+
+
+{% endblock %}

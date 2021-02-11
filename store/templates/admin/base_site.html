@@ -1,0 +1,15 @@
+{% extends 'admin/base.html' %}
+{% load cloth_tags %}
+{% load static %}
+{% block branding %}
+
+<h1 id="head">
+    <img src = "{% web_logo %}" alt="SochApparels" height="70" width="120">
+</h1>
+
+{% endblock %}
+{% block extrastyle %}
+
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
+{% endblock %}

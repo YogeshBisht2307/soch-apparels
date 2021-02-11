@@ -1,0 +1,21 @@
+{% extends 'store/layout.html' %}
+{% load crispy_forms_tags %}
+{% block title %} SochApparels | Login {% endblock %}
+
+{% block body %}
+<div class="col-lg-3 mx-auto border rounded p-5 mb-5 mt-5">
+    <form action="/login/" method="POST">
+        {% csrf_token %}
+        <h1 class="display-4 text-center mt-3 mb-4">Login Here</h1>
+        <div class="text-center ">
+            <img style="height:90px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5IvERx1WL6GmV0HMfOL8qTMvJpH5KG5iOqQ&usqp=CAU">
+        </div>
+        <hr class="mb-5">
+        {{form|crispy}}
+        <a href="/password_reset/">Forget Password?</a>
+        <div class="form-group">
+        <input type="submit"  id="" class="btn btn-lg btn-block btn-info mb-5 mt-5" value="login">
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'store/layout.html' %}
+{% load crispy_forms_tags %}
+{% load cloth_tags %}
+{% block title %}Select a Delivery Address{% endblock %}
+
+{% block body %}
+
+<section>
+    {% for message in messages %}
+    {% if message %}
+    <div class="alert alert-danger fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Hey {{request.user.first_name}}!!! </strong> {{message}}
+    </div>
+    {% endif %}
+    {% endfor %}
+    <div class="container">
+        <div class="p-2">
+            <div class="display-4 mt-5">
+                Checkout Page
+            </div>
+            <hr>
+            <div class="row mb-5 mt-5">
+                <div class="col-lg-5 border rounded  p-5">
+                    <form action="/checkout/" method="POST">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <div class="form-group">
+                          <input type="submit" value="Checkout" class="checkout btn  btn-outline">
+                        </div>
+                    </form>
+                </div>
+                {% if buy %}
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Cloths</th>
+                                <th>Size</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for b in buy|slice:"0:1" %}
+                            <tr>
+
+                                <td scope="row">1</td>
+                                <td>{{b.size.cloth.cloth_name}}</td>
+                                <td>{{b.size.size}}</td>
+                                <td>{% calculate_sale_price b.size.price b.size.cloth.cloth_discount as result %}{{result|rupee}}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                <hr>
+                <div>
+                    {% for b in buy|slice:"0:1" %}
+                    <h2 class="mt-5">Total Payable Amount is - <span class="badge badge-danger p-3">{% calculate_sale_price b.size.price b.size.cloth.cloth_discount as result %}{{result|rupee}}</span>
+                        </h2>
+                    {% endfor %}
+                </div>
+
+                </div>
+                {% else %}
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Cloths</th>
+                                <th>Size</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for c in cart%}
+                            <tr>
+
+                                <td scope="row">1</td>
+                                <td>{{c.size.cloth.cloth_name}}</td>
+                                <td>{{c.size.size}}</td>
+                                <td>{% calculate_sale_price c.size.price c.size.cloth.cloth_discount as result %}{{result|rupee}}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                <hr>
+                <div>
+                    <h2 class="mt-5">Total Payable Amount is - <span class="badge badge-danger p-3">{{cart|total_payable_amount|rupee}}</span>
+                        </h2>
+                </div>
+                </div>
+                {% endif %}
+            </div>
+    </div>
+    </div>
+</section>
+{% if payment %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_VhJ6TqqnLU9DBc", // Enter the Key ID generated from the Dashboard
+    "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Cloth Shopping",
+    "description": "Test Transaction",
+    "image": "{% web_logo %}",
+    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "http://localhost:8000/validate_payment/",
+    "prefill": {
+        "name": "{% web_name %}",
+        "email": "{% get_email_1 %}",
+        "contact": "{% get_mobile_1 %}"
+    },
+    "theme": {
+        "color": "#e71247"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+</script>
+{% endif %}
+{% endblock %}

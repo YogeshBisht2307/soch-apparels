@@ -1,0 +1,25 @@
+{% extends "store/layout.html" %}
+
+{% load static %}
+{% block title %} SochApparels | About us {% endblock %}
+
+{% block body %}
+
+  <!--content----------------->
+    <div class="container">
+	<div class="content row">
+        <!--model--------------->
+        <div class="model col-lg-6 col-md-6 col-sm-12 col-12">
+            <img src="{{about.image.url}}"/>
+        </div>
+        <!--text-------------->
+        <div class="main-text  col-lg-6 col-md-6 col-sm-12 col-12">
+            <h1>{{about.title}}</h1>
+            <p>{{about.description}}</p>
+        <!--btn------->
+            <a href="/{{about.link}}" class="portfolio-btn">{{about.link_text}}</a>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

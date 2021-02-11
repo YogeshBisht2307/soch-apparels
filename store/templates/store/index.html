@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load cloth_tags %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&display=swap"rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- Glidejs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{%static 'store/style.css' %}" />
+    <link rel="shortcut icon" href="{{website.website_logo.url}}" />
+
+    <title>{{website.website_name}} : Delhi ki Apni Dukan</title>
+</head>
+
+<body>
+    <!--
+        ========================
+        Header
+        ========================
+     -->
+    <header id="header" class="header" style="background:linear-gradient(to top,
+  rgba(17, 117, 231, 0.5),
+  rgba(136, 0, 133, 0.6)),
+url('{{website.hero_image.url}}') center/cover no-repeat fixed">
+        <!-- Navigation -->
+        <div class="navigation">
+            <div class="container">
+                <nav class="nav__center">
+                    <div class="nav__header">
+                        <div class="nav__logo">
+                            <h1><span></span>{{website.website_name}}<span></span></h1>
+                        </div>
+
+                        <div class="nav__hamburger">
+                            <span>
+                                <i class="fas fa-bars" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="nav__menu">
+                        <div class="menu__top">
+                            <h1 class="nav__category">{{website.website_name}}</h1>
+                            <div class="close__toggle">
+                                <i class="fas fa-cross" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <ul class="nav__list">
+                            <li class="nav__item">
+                                <a href="/" class="nav__link">Home</a>
+                            </li>
+
+                            <li class="nav__item">
+                                <a href="/store" class="nav__link ">Shop</a>
+                            </li>
+
+                            <li class="nav__item">
+                                <a href="/cart" class="nav__link ">Cart</a>
+                            </li>
+
+                            <li class="nav__item">
+                                <a href="/contact" class="nav__link">Contact</a>
+                            </li>
+
+                            <!--Showing and hidding the button on user logIn and logOut-->
+                            {% if request.user.is_authenticated %}
+                                <li class="nav__item">
+                                    <a href="/orders" class="nav__link">Orders</a>
+                                </li>
+                                <li class="nav__item">
+                                <a href="/logout" class="nav__link">Logout</a>
+                                </li>
+
+
+                            {% else %}
+
+                                <li class="nav__item">
+                                    <a href="/login" class="nav__link">Login</a>
+                                </li>
+                                <li class="nav__item">
+                                    <a href="/registration" class="nav__link">Register</a>
+                                </li>
+
+                            {% endif  %}
+                        </ul>
+
+                        <ul class="nav__icons">
+                            {% if request.user.is_authenticated %}
+                              <h3 class="text-white mr-3">{{request.user.first_name}}</h3>
+                              {% endif %}
+                            <a href="/cart" class="icon__item">
+                                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                                <span>{{request.session.cart|length}}</span>
+                            </a>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero__content container">
+                <h1>
+                    {{website.hero_headline}}
+                </h1>
+                <a href="/store" class="btn btn-hero">shop now</a>
+            </div>
+
+            <a href="#new__arrival" class="goto__next ">
+                <span>
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                </span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main>
+        <!-- New Arrival -->
+        {% if new_arrival %}
+        <section class="section new__arrival" id="new__arrival">
+            <div class="arrivals container">
+                <div class="title">
+                    <h1 class="primary__title">New Arrival</h1>
+                </div>
+
+                <div class="arrival__center">
+                    {% for cloth in new_arrival %}
+                    <div class="product h-100  w-100 border rounded ">
+                        <div class="img__container">
+                            <img src="{{cloth.cloth_image.url}}" alt="" />
+                        </div>
+                        <div class="product__bottom">
+                            <div class="price">
+                                <span class="text-danger"> <del>{% min_price cloth as result %} {{ result|rupee}}</del></span>&nbsp;
+                                <span>{% discount_price cloth as result %} {{result|rupee}}</span>
+                                <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
+                            </div>
+                            <h3 class="p-4">{{cloth.cloth_name}}</h3>
+                            <div class="button">
+                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block">See More</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    {% if Trending != None %}
+        <!-- Cart Slide -->
+        <section class="cart__slide">
+            <div class="arrival__slide container">
+                <div class="glide" id="glide1">
+                    <div class="glide__track" data-glide-el="track">
+                        <ul class="glide__slides">
+                            {% for cloth in Trending %}
+                            <li class="glide__slide">
+                                <div class="arrival">
+                                    <div class="cart__like">
+                                        <div class="image__holder">
+                                            <img src="{{cloth.cloth_image.url}}" alt="" />
+                                        </div>
+                                        <div class="cart__details">
+                                            <h1>{{cloth.cloth_name}}</h1>
+                                            <p>
+                                               {{cloth.cloth_description}}
+                                            </p>
+                                            <div class="price">
+                                                <span class="text-danger"> <del>{% min_price cloth as result %} {{ result|rupee}}</del></span>&nbsp;
+                                                <span>{% discount_price cloth as result %} {{result|rupee}}</span>
+                                                <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
+                                            </div>
+                                            <div class="btn__group">
+                                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block"><button>View More</button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Arrows -->
+                    <div class="glide__arrows" data-glide-el="controls">
+                        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+                            prev
+                        </button>
+                        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+                            next
+                        </button>
+                    </div>
+
+                    <!-- Thumbnails -->
+
+                    <div class="glide__bullets" data-glide-el="controls[nav]">
+                        {% for cloth in Trending %}
+                        <button class="glide__bullet" data-glide-dir="={% counter forloop.counter %}">
+                            <div class="thumbnail">
+                                <img src="{{cloth.cloth_image.url}}" alt="" />
+                            </div>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Special Offer Banner -->
+        <section class="section special__offer" style="background:linear-gradient(to top,
+    rgb(17, 117, 231, 0.5),
+    rgba(136, 0, 133, 0.6)),
+  url('{{website.offer_image.url}}') center/cover no-repeat fixed">
+            <div class="offer__container">
+                <h1>{{website.offer_headine}}</h1>
+                <p>{{website.offer_text}}</p>
+                <a href="/store">SHOP NOW</a>
+            </div>
+        </section>
+
+        <!-- Value for money section-->
+        {% if valueformoney %}
+        <section class="section featured" id="featured">
+            <div class="featured__container container">
+                <div class="title">
+                    <h1 class="primary__title">Value for Money</h1>
+                </div>
+
+                <div class="featured__center">
+                    {% for cloth in valueformoney|slice:"0:4" %}
+                    <div class="product h-100  w-100 border rounded ">
+                        <div class="img__container">
+                            <img src="{{cloth.cloth_image.url}}" alt="" />
+                        </div>
+                        <div class="product__bottom">
+                            <div class="price">
+                                <span class="text-danger"> <del>{% min_price cloth as result %} {{ result|rupee}}</del></span>&nbsp;
+                                <span>{% discount_price cloth as result %} {{result|rupee}}</span>
+                                <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
+                            </div>
+                            <h3 class="p-4">{{cloth.cloth_name}}</h3>
+                            <div class="button">
+                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block">See More</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Footer -->
+        <footer id="footer" class="section footer">
+            <div class="container">
+                <div class="footer__top">
+                    <div class="footer-top__box">
+                        <h3>INFORMATION</h3>
+                        <a href="/about">About Us</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms & Conditions</a>
+                        <a href="/contact">Contact Us</a>
+                    </div>
+                    <div class="footer-top__box">
+                        <h3>MY ACCOUNT</h3>
+                        <a href="/login">Login</a>
+                        <a href="/registration">Signup</a>
+                        <a href="/orders">Order History</a>
+                        <a href="/cart">Cart</a>
+                    </div>
+                    <div class="footer-top__box">
+                        <h3>CONTACT US</h3>
+                        <div>
+                            <span>
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                           {{website.location}}
+                        </div>
+                        <div>
+                            <span>
+                                <i class="far fa-envelope"></i>
+                            </span>
+                            {{website.email_1}}
+                        </div>
+                        <div>
+                            <span>
+                                <i class="fas fa-phone-square-alt"></i>
+                            </span>
+                            {{website.mobile_1}}
+                        </div>
+                        <div>
+                            <span>
+                                <i class="far fa-address-card"></i>
+                            </span>
+                            {{website.city}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+    </main>
+
+    <!-- Glidejs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
+
+    <!-- Custom Script -->
+    <script src="{%static 'store/js/main.js' %}"></script>
+</body>
+
+</html>

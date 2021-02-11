@@ -1,0 +1,146 @@
+{% extends 'store/layout.html' %}
+
+{% block title %}Orders {% endblock %}
+
+{% load cloth_tags %}
+
+{% block body %}
+
+
+ <!-- Cart Items -->
+ <div class="container mt-5 cart">
+    <h1 class="primaryCart__title">My Order</h1>
+    {% for message in messages %}
+    {% if message %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Hey {{request.user.first_name}}!!! </strong> {{message}}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% if page_object  %}
+    <table>
+        <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Date</th>
+        <th>Items</th>
+          <th><span class="float-right">Payment</span></th>
+        <th>Status</th>
+      </tr>
+    </thead>
+      <tbody>
+          {% for order in page_object %}
+          <tr>
+              <td>{{forloop.counter}}</td>
+              <td>{{order.date|date}}</td>
+              <td>
+                  <table class="px-5 table table-sm">
+                    <thead >
+                        <tr class="table-active">
+                            <th>S.no</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for oi in order.order_item_set.all %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>
+                                <div class="cart-info">
+                                  <img height="70px" class="rounded-circle" src="{{oi.cloth.cloth_image.url}}" alt="">
+                                  <div>
+                                    <p>{{oi.cloth.cloth_name}}</p>
+                                    <span>Price:-{{oi.price|rupee}} </span>
+
+                                  </div>
+                                </div>
+                              </td>
+                            <td>{{oi.quantity}}</td>
+                            <td>{% multiply oi.quantity oi.price as result %}{{result|rupee}}</td>
+
+                        </tr>
+                        {% endfor %}
+
+
+                    </tbody>
+                  </table>
+                  {% if order.order_status != "COMPLETE" and order.order_status != "CANCELED" %}
+                  <!-- Button trigger modal -->
+                    <a href="/cancel_order/?oddl={{order.id}}"><button type="button"class="float-left cancel_order {% disable_cancel_order_button order.order_status %} " data-toggle="modal" data-target="#exampleModal">
+                      Cancel Order
+                    </button></a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Order Cancelation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Please make sure that you want to cancel the order.
+                          </div>
+                          <div class="modal-footer">
+                            <a href="order/"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></a>
+                            <a href="cancel_order/?oddl{{order.id}}"><button type="button" class="btn btn-primary">Cancel Order</button></a>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif  %}
+                  <h2><span class="float-right  p-3 m-0 order_total ">Total :- {{order.total|rupee}}</span></h2>
+              </td>
+              <td><span class="float-right">{{order.payment_method}}</span></td>
+              <td>
+                  <span class="badge badge-{% get_order_status order.order_status %} p-3">{{order.order_status}}</span></td>
+
+          </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-end">
+          {% if page_object.has_previous %}
+              <li  class="page-item">
+                  <a class="page-link" href="?page=1">first</a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_object.previous_page_number }}">&laquo;</a>
+              </li>
+          {% endif %}
+
+
+          <li class="page-item active">
+              <a href="" class="page-link"> Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}.</a>
+          </li>
+
+
+          {% if page_object.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_object.next_page_number }}">&raquo;</a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link"  href="?page={{ page_object.paginator.num_pages }}">last</a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+  {% else %}
+  <div class="no-order">
+    <h3>You did't make any order!..... Please make sure you are login</h3>
+  </div>
+  {% endif %}
+  </div>
+
+
+{% endblock %}
