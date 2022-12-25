@@ -57,40 +57,32 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                         </div>
                         <ul class="nav__list">
                             <li class="nav__item">
-                                <a href="/" class="nav__link">Home</a>
+                                <a href="{% url 'Home' %}" class="nav__link">Home</a>
                             </li>
-
                             <li class="nav__item">
-                                <a href="/store" class="nav__link ">Shop</a>
+                                <a href="{% url 'Store' %}" class="nav__link ">Shop</a>
                             </li>
-
                             <li class="nav__item">
-                                <a href="/cart" class="nav__link ">Cart</a>
+                                <a href="{% url 'Cart' %}" class="nav__link ">Cart</a>
                             </li>
-
                             <li class="nav__item">
-                                <a href="/contact" class="nav__link">Contact</a>
+                                <a href="{% url 'Contact' %}" class="nav__link">Contact</a>
                             </li>
-
                             <!--Showing and hidding the button on user logIn and logOut-->
                             {% if request.user.is_authenticated %}
                                 <li class="nav__item">
-                                    <a href="/orders" class="nav__link">Orders</a>
+                                    <a href="{% url 'Orders' %}" class="nav__link">Orders</a>
                                 </li>
                                 <li class="nav__item">
-                                <a href="/logout" class="nav__link">Logout</a>
+                                <a href="{% url 'Logout' %}" class="nav__link">Logout</a>
                                 </li>
-
-
                             {% else %}
-
                                 <li class="nav__item">
-                                    <a href="/login" class="nav__link">Login</a>
+                                    <a href="{% url 'Login' %}" class="nav__link">Login</a>
                                 </li>
                                 <li class="nav__item">
-                                    <a href="/registration" class="nav__link">Register</a>
+                                    <a href="{% url 'Registration' %}" class="nav__link">Register</a>
                                 </li>
-
                             {% endif  %}
                         </ul>
 
@@ -98,7 +90,7 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                             {% if request.user.is_authenticated %}
                               <h3 class="text-white mr-3">{{request.user.first_name}}</h3>
                               {% endif %}
-                            <a href="/cart" class="icon__item">
+                            <a href="{% url 'Cart' %}" class="icon__item">
                                 <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                                 <span>{{request.session.cart|length}}</span>
                             </a>
@@ -114,7 +106,7 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                 <h1>
                     {{website.hero_headline}}
                 </h1>
-                <a href="/store" class="btn btn-hero">shop now</a>
+                <a href="{% url 'Store' %}" class="btn btn-hero">shop now</a>
             </div>
 
             <a href="#new__arrival" class="goto__next ">
@@ -149,9 +141,8 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                             </div>
                             <h3 class="p-4">{{cloth.cloth_name}}</h3>
                             <div class="button">
-                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block">See More</a>
+                                <a href="{% url 'ProductDetail' cloth.cloth_slug %}" class="btn-block">See More</a>
                             </div>
-
                         </div>
                     </div>
                     {% endfor %}
@@ -184,7 +175,7 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                                                 <span class="float-right badge p-3 badge-info">Save {{cloth.cloth_discount}}% </span>
                                             </div>
                                             <div class="btn__group">
-                                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block"><button>View More</button></a>
+                                                <a href="{% url 'ProductDetail' cloth.cloth_slug %}" class="btn-block"><button>View More</button></a>
                                             </div>
                                         </div>
                                     </div>
@@ -228,7 +219,7 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
             <div class="offer__container">
                 <h1>{{website.offer_headine}}</h1>
                 <p>{{website.offer_text}}</p>
-                <a href="/store">SHOP NOW</a>
+                <a href="{% url 'Store' %}">SHOP NOW</a>
             </div>
         </section>
 
@@ -254,7 +245,7 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                             </div>
                             <h3 class="p-4">{{cloth.cloth_name}}</h3>
                             <div class="button">
-                                <a href="/product_detail/{{cloth.cloth_slug}}" class="btn-block">See More</a>
+                                <a href="{% url 'ProductDetail' cloth.cloth_slug %}" class="btn-block">See More</a>
                             </div>
                         </div>
                     </div>
@@ -270,17 +261,17 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
                 <div class="footer__top">
                     <div class="footer-top__box">
                         <h3>INFORMATION</h3>
-                        <a href="/about">About Us</a>
+                        <a href="{% url 'About' %}">About Us</a>
                         <a href="#">Privacy Policy</a>
                         <a href="#">Terms & Conditions</a>
-                        <a href="/contact">Contact Us</a>
+                        <a href="{% url 'Contact' %}">Contact Us</a>
                     </div>
                     <div class="footer-top__box">
                         <h3>MY ACCOUNT</h3>
-                        <a href="/login">Login</a>
-                        <a href="/registration">Signup</a>
-                        <a href="/orders">Order History</a>
-                        <a href="/cart">Cart</a>
+                        <a href="{% url 'Login' %}">Login</a>
+                        <a href="{% url 'Registration' %}">Signup</a>
+                        <a href="{% url 'Orders' %}">Order History</a>
+                        <a href="{% url 'Cart' %}">Cart</a>
                     </div>
                     <div class="footer-top__box">
                         <h3>CONTACT US</h3>
@@ -318,7 +309,6 @@ url('{{website.hero_image.url}}') center/cover no-repeat fixed">
 
     <!-- Glidejs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
-
     <!-- Custom Script -->
     <script src="{%static 'store/js/main.js' %}"></script>
 </body>
