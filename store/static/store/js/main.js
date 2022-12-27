@@ -60,4 +60,4 @@ document.getElementsByClassName('.header').style.backgroundImage = "url(pic1.png
 //filter form auto load
 function submitForm(){
   document.getElementById('filterform').submit()
-  }
+}

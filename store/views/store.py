@@ -1,19 +1,30 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from store.models import Cloth, Occasion, Category, Sub_Category, Color,Brand
-from django.core.paginator import Paginator
+from typing import Dict, List
+
 from urllib.parse import urlencode
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.core.paginator import Page
+from django.http.request import QueryDict
+from django.db.models.query import QuerySet
+from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
+
+from store.models import Cloth
+from store.models import Occasion
+from store.models import Category
+from store.models import Sub_Category
+from store.models import Color
+from store.models import Brand
+
 
 class StoreView(TemplateView):
     template_name = 'store/shop.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        request = self.request
-        query = request.GET
-        cloths = []
-        cloths = Cloth.objects.all()
+    def get_context_data(self, **kwargs) -> Dict:
+        context: Dict = super().get_context_data(**kwargs)
+        query: QueryDict = self.request.GET
+
         category = query.get('category')
         sub_category = query.get('sub_category')
         occasion = query.get('occasion')
@@ -21,30 +32,27 @@ class StoreView(TemplateView):
         color = query.get('color')
         page = query.get('page')
 
-        if page is None and page == "":
-            page = 1
+        page = 1 if not page else page
 
-        if category != "" and category is not None:
-            cloths = cloths.filter(category__slug=category)
-        if sub_category != "" and sub_category is not None:
-            cloths = cloths.filter(sub_category__slug=sub_category)
-        if occasion != "" and occasion is not None:
-            cloths = cloths.filter(ocassion__slug=occasion)
-        if brand != "" and brand is not None:
-            cloths = cloths.filter(brand__slug=brand)
-        if color != "" and color is not None:
-            cloths = cloths.filter(color__slug=color)
+        query_parameter: Dict = {}
+        query_parameter.update({'category__slug': category}) if category else None
+        query_parameter.update({'sub_category__slug': sub_category}) if sub_category else None
+        query_parameter.update({'ocassion__slug': occasion}) if occasion else None
+        query_parameter.update({'brand__slug': brand}) if brand else None
+        query_parameter.update({'color__slug': color}) if color else None
 
-        occasions = Occasion.objects.all()
-        brands = Brand.objects.all()
-        colors = Color.objects.all()
-        categories = Category.objects.all()
-        sub_categories = Sub_Category.objects.all()
+        # TODO: Run these query in parllel (async)
+        cloths: QuerySet = Cloth.objects.filter(**query_parameter).order_by('-created')
+        occasions: QuerySet = Occasion.objects.all()
+        brands: QuerySet = Brand.objects.all()
+        colors: QuerySet = Color.objects.all()
+        categories: QuerySet = Category.objects.all()
+        sub_categories: QuerySet = Sub_Category.objects.all()
 
-        paginator = Paginator(cloths, 9)
-        page_object = paginator.get_page(page)
+        paginator: Paginator = Paginator(cloths, 9)
+        page_object: Page = paginator.get_page(page)
 
-        query = request.GET.copy()
+        query = self.request.GET.copy()
         query['page'] = ''
         pageurl = urlencode(query)
 
@@ -57,6 +65,5 @@ class StoreView(TemplateView):
             "sub_categories": sub_categories,
             'pageurl': pageurl
         }
-        cart = request.session.get('cart')
+        cart = self.request.session.get('cart')
         return context
-
