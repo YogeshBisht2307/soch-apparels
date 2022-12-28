@@ -7,7 +7,7 @@ from django.views.generic.base import View, TemplateView
 
 
 class AddCartView(View):
-    def get(self, request: WSGIRequest, cloth_slug: str, size: int) -> response.HttpResponseRedirect:
+    def get(self, request: WSGIRequest, cloth_slug: str, size: str) -> response.HttpResponseRedirect:
         user = request.user if request.user.is_authenticated else None
         cart: List  = request.session.get('cart', [])
 
@@ -33,7 +33,6 @@ class AddCartView(View):
         
         return_url = request.GET.get('return_url')
         request.session['cart'] = cart
-
         if not user:
             return redirect(return_url)
 
@@ -75,7 +74,7 @@ class RemoveCartView(View):
         1. If user not logged in it will just update the anonymouos user session.s
         2. If user is logged in it will remove the cloth entry from database and user session.
     """
-    def get(self, request: WSGIRequest, cloth_slug: str, size: int) -> response.HttpResponseRedirect:
+    def get(self, request: WSGIRequest, cloth_slug: str, size: str) -> response.HttpResponseRedirect:
         user = request.user if request.user.is_authenticated else None
         cart: List = request.session.get('cart', [])
 
