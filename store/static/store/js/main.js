@@ -29,10 +29,7 @@ navClose.addEventListener("click", () => {
   }
 });
 
-
-
 // FixNav
-
 window.addEventListener("scroll", () => {
   const navHeight = navBar.getBoundingClientRect().height;
   const scrollHeight = window.pageYOffset;
@@ -45,17 +42,20 @@ window.addEventListener("scroll", () => {
 });
 
 //slider
-const slider1 = document.getElementById("glide1");
+const slider = document.getElementById("glide1");
+if (slider){
+  new Glide(slider, {
+    type: "carousel",
+    startAt: 0,
+    perview: 1,
+    animationDuration: 800,
+    animationTimingFunc: "linear",
+  }).mount();
+}
 
-new Glide(slider1, {
-  type: "carousel",
-  startAt: 0,
-  perview: 1,
-  animationDuration: 800,
-  animationTimingFunc: "linear",
-}).mount();
-
-document.getElementsByClassName('.header').style.backgroundImage = "url(pic1.png)";
+if (document.getElementsByClassName('.header').length !== 0){
+  document.getElementsByClassName('.header').style.backgroundImage = "url(pic1.png)";
+}
 
 //filter form auto load
 function submitForm(){
