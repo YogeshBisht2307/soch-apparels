@@ -1,25 +1,23 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from store.models import Cloth, Size_Variant, Cart, Order, Order_Item, Payment, Occasion, Category, Sub_Category, Color, \
-    Brand, Comment
 from math import floor
-
-from store.forms.authforms import CustomerCreationForm, \
-    CustomerAuthenticationForm  # imporing the class from froms folder
-from django.contrib.auth import authenticate, login as loginUser
-from django.core.paginator import Paginator
-from django.views.generic.base import View
+from typing import Dict
 from django.contrib import messages
+from django.views.generic.base import View
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, response
+from django.core.handlers.wsgi import WSGIRequest
+
+from store.models import *
 from django.core.mail import send_mail
 from SochApparels.settings import EMAIL_HOST_USER
 
 
+
 class CancelOrderView(View):
-    def get(self, request):
+    def get(self, request: WSGIRequest) -> response.HttpResponseRedirect:
         user = request.user
-        # getting the value of order_id
-        order_id = request.GET.get('oddl')
-        order = Order.objects.get(id=order_id)
+        order_id: str = request.GET.get('oddl')
+        order: Order = Order.objects.get(id=order_id)
         if order.order_status != "CANCELED" and order.order_status != "COMPLETE":
             order.order_status = "CANCELED"
             order.save()
@@ -33,24 +31,14 @@ class CancelOrderView(View):
 
 
 class OrderView(View):
-    def get(self, request):
-        page = request.GET.get('page')
+    def get(self, request) -> HttpResponse:
+        page: int = request.GET.get('page')
         user = request.user
-        try:
-            orders = Order.objects.filter(user=user).order_by('-date').exclude(order_status="PENDING")
-            if page is None and page == "":
-                page = 1
-            paginator = Paginator(orders, 5)
-            page_object = paginator.get_page(page)
-        except:
-            page_object = None
-
-
-        context = {
+        orders: Order = Order.objects.filter(user=user).order_by('-date').exclude(order_status="PENDING")
+        page = 1 if not page else page
+        paginator: Paginator = Paginator(orders, 5)
+        page_object = paginator.get_page(page)
+        context: Dict = {
             "page_object": page_object,
         }
-
         return render(request, 'store/order.html', context=context)
-
-
-

@@ -74,6 +74,7 @@ class CheckoutView(View):
         user = request.user if request.user.is_authenticated else None
         buy: List = request.session.get('buy', [])
         cart: List = request.session.get('cart', [])
+        print(cart)
 
         if not form.is_valid():
             return redirect('/checkout/')
@@ -176,7 +177,8 @@ class CheckoutView(View):
                 'form': checkout_form,
                 'cart': cart,
                 'buy': buy,
-                'payment': payment_id
+                'payment': payment_id,
+                'rz_key': KEY_ID
             }
             return render(request, 'store/checkout.html', context=context)
         else:
@@ -194,7 +196,7 @@ class CheckoutView(View):
 
                 send_mail(
                     'Product Purchased',
-                    'Payment for ordered product has successfull worth of money !',
+                    'Payment for ordered product has successfull!',
                     EMAIL_HOST_USER,
                     [user.email],
                     fail_silently=False,

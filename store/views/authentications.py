@@ -73,12 +73,11 @@ class LoginView(View):
 
         cart: Cart = Cart.objects.filter(user=user)
         session_cart = []
-        for c in cart:
+        for cart_obj in cart:
             obj: Dict = {
-                'size': c.sizeVariant.size,
-                'cloth': c.sizeVariant.cloth.id,
-                'quantity': c.quantity
-
+                'size': cart_obj.sizeVariant.size,
+                'cloth': cart_obj.sizeVariant.cloth.id,
+                'quantity': cart_obj.quantity
             }
             session_cart.append(obj)
 

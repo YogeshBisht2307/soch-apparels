@@ -12,5 +12,6 @@ from store.views.comment import CommentView
 from store.views.contact import ContactView
 from store.views.buy import BuyView
 from store.views.about import AboutView
+from store.views.payment import PaymentFailed
 
 

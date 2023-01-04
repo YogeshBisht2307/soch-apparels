@@ -1,30 +1,26 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from store.models import Cloth, Size_Variant, Cart, Order, Order_Item, Payment, Occasion, Category, Sub_Category, Color, \
-    Brand, Comment, Contact
+import os
 from math import floor
-from django.contrib.auth.decorators import login_required
-from store.forms.authforms import CustomerCreationForm, \
-    CustomerAuthenticationForm  # imporing the class from froms folder
-from django.contrib.auth import authenticate, login as loginUser
+from store.models import Contact
+from django.http import HttpResponse
+from typing import Optional, Tuple, Dict
 from django.views.generic.base import View
 from django.core.mail import send_mass_mail
+from django.shortcuts import render, redirect
 from SochApparels.settings import EMAIL_HOST_USER
+from django.core.handlers.wsgi import WSGIRequest
 
 
 class ContactView(View):
-    def get(self, request):
+    def get(self, request: WSGIRequest) -> HttpResponse:
         return render(request, 'store/contact.html')
 
-    def post(self, request):
+    def post(self, request: WSGIRequest) -> HttpResponse:
+        name: str = request.POST.get('name')
+        email: str = request.POST.get('email')
+        subject: str = request.POST.get('subject')
+        message: str = request.POST.get('message')
 
-        query = request.POST
-        name = query.get('name')
-        email = query.get('email')
-        subject = query.get('subject')
-        message = query.get('message')
-
-        error_message = None
+        error_message: Optional[str] = None
         if name == "":
             error_message = "Name is required"
         elif len(name) < 4:
@@ -40,32 +36,26 @@ class ContactView(View):
         elif message == "" and len(message) < 20:
             error_message = "Explain your Subject properly"
 
-        # saving the contact information
-        if error_message is None:
-            contact = Contact()
+        if not error_message:
+            contact: Contact = Contact()
             contact.name = name
             contact.email = email
             contact.subject = subject
             contact.message = message
             contact.save()
 
-            user_message = ('Product Issue Submitted',
+            user_message: Tuple = ('Product Issue Submitted',
                             f"We have recieved your query regarding :- {contact.subject}, we will try to resolve is soon",
-                            'Yogeshbisht.2307@gmail.com', [contact.email])
+                            os.environ['SENDER_EMAIL'], [contact.email])
 
-            host_message = (contact.subject,
+            host_message: Tuple = (contact.subject,
                             f"You have recieved a email regarding product or website issue from {contact.email} . The message is as follow :- {contact.message}",
-                            'Yogeshbisht.2307@gmail.com', [EMAIL_HOST_USER])
+                            os.environ['SENDER_EMAIL'], [EMAIL_HOST_USER])
 
-            send_mass_mail(
-                (user_message,
-                 host_message),
-                fail_silently=False
-            )
-            return render(request, 'store/contact.html',
-                          {"success": "Your request has recieved , we will response to it soon ! "})
+            send_mass_mail((user_message, host_message), fail_silently=False)
+            return render(request, 'store/contact.html', {"success": "Your request has recieved , we will response to it soon ! "})
         else:
-            context = {
+            context: Dict = {
                 "error_message": error_message,
                 "name": name,
                 "email": email,
