@@ -1,21 +1,16 @@
-from typing import Dict, List
-
+from typing import Dict
+from store.models import Cloth
+from store.models import Color
+from store.models import Brand
+from store.models import Occasion
+from store.models import Category
+from store.models import Sub_Category
 from urllib.parse import urlencode
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.core.paginator import Page
 from django.http.request import QueryDict
 from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
 from django.views.generic.base import TemplateView
-
-from store.models import Cloth
-from store.models import Occasion
-from store.models import Category
-from store.models import Sub_Category
-from store.models import Color
-from store.models import Brand
 
 
 class StoreView(TemplateView):
@@ -65,5 +60,4 @@ class StoreView(TemplateView):
             "sub_categories": sub_categories,
             'pageurl': pageurl
         }
-        cart = self.request.session.get('cart')
         return context

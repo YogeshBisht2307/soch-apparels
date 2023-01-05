@@ -1,7 +1,7 @@
+from django.http import response
 from django.shortcuts import redirect
 from store.models import Comment, Cloth
 from django.views.generic.base import View
-from django.http import HttpResponse, response
 from django.core.handlers.wsgi import WSGIRequest
 
 

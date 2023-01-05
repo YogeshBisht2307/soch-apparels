@@ -1,56 +1,54 @@
+from store.models import *
 from django.contrib import admin
-from store.models import Cloth, Brand, Color, Occasion, Category, Sub_Category, Size_Variant, Cart, Order, Payment, \
-    Order_Item, Comment, Contact, WebsiteDetail, About
 from django.utils.html import format_html
+from typing import Dict, List, Any, Optional, Tuple
 
 
-# Register your models here.
 class Size_Variant_Configuration(admin.TabularInline):
     model = Size_Variant
 
-
 class Order_Item_Configuration(admin.TabularInline):
     model = Order_Item
-
 
 class Comment_Configurations(admin.TabularInline):
     model = Comment
 
 
-# admin site configuration of Cloth
-
+# Admin site configuration of Cloth
 class Cloth_Configuration(admin.ModelAdmin):
-    inlines = [Size_Variant_Configuration, Comment_Configurations]
-    list_display = ['get_image', 'cloth_name', 'cloth_discount']
-    list_editable = ['cloth_discount']
-    sortable_by = ['cloth_discount']
-    list_filter = ['cloth_discount']
-    list_display_links = ['cloth_name']
-    list_per_page = 6
-    search_fields = ('cloth_name','cloth_discount')
+    inlines: List = [Size_Variant_Configuration, Comment_Configurations]
+    list_per_page: int = 6
+    list_editable: List[str] = ['cloth_discount']
+    sortable_by: List[str] = ['cloth_discount']
+    list_filter: List[str] = ['cloth_discount']
+    list_display_links: List[str] = ['cloth_name']
+    search_fields: Tuple = ('cloth_name','cloth_discount')
+    list_display: List[str] = ['get_image', 'cloth_name', 'cloth_discount']
 
-    def get_image(self, obj):
+
+    def get_image(self, obj: Cloth) -> str:
         return format_html(f"""
             <a href='{obj.cloth_image.url}' target='_blank'><img height='60px' src='{obj.cloth_image.url}'/></a>
         """)
 
 
 # admin site configuration of Cart
-
 class Cart_Configuration(admin.ModelAdmin):
     model = Cart
-    list_display = ['cloth', 'quantity', 'size', 'user']
-    search_fields = ('cloth', 'size', 'user')
+    list_per_page = 10
+    list_display_links = ['cloth']
+    list_display: List = ['cloth', 'quantity', 'size', 'user']
+    search_fields: Tuple = ('cloth', 'size', 'user')
 
-    fieldsets = (
+    fieldsets: Tuple = (
         ("Cart Info", {"fields": ('user', 'get_cloth', 'get_sizeVariant', 'quantity')}),
     )
     readonly_fields = ('quantity', 'get_sizeVariant', 'user', 'get_cloth')
 
-    def get_sizeVariant(self, obj):
+    def get_sizeVariant(self, obj: Cart) -> str:
         return obj.sizeVariant.size
 
-    def get_cloth(self, obj):
+    def get_cloth(self, obj: Cart) -> str:
         cloth = obj.sizeVariant.cloth
         cloth_id = cloth.id
         cloth_name = cloth.cloth_name
@@ -58,55 +56,49 @@ class Cart_Configuration(admin.ModelAdmin):
 
     get_cloth.short_description = 'Cloth'
     get_sizeVariant.short_description = "Size"
-    # cloth information will be displayed by clicking on name
-    list_display_links = ['cloth']
-    # pagination in admin site
-    list_per_page = 10
 
-    def size(self, obj):
+    def size(self, obj: Cart) -> str:
         return obj.sizeVariant.size
 
-    def cloth(self, obj):
+    def cloth(self, obj: Cart) -> str:
         return obj.sizeVariant.cloth.cloth_name
 
 
-# admin site configuration of Orders
+# Admin site configuration of Orders
 class Order_Configuration(admin.ModelAdmin):
-    list_display = ['user', 'shipping_address', 'phone', 'date', 'total', 'order_status']
-    list_editable = ['order_status']
-    search_fields = ('id', 'user','phone','order_status')
-    readonly_fields = (
+    list_per_page = 10
+    inlines: List = [Order_Item_Configuration]
+    list_editable: List[str] = ['order_status']
+    search_fields: Tuple = ('id', 'user','phone','order_status')
+    list_display: List[str] = ['user', 'shipping_address', 'phone', 'date', 'total', 'order_status']
+    readonly_fields: Tuple = (
     'user', 'shipping_address', 'phone', 'date', 'total', 'payment_method', 'payment', 'payment_request_id',
     'payment_id', 'payment_status')
 
-    fieldsets = (
+    fieldsets: Tuple = (
         ("Order Information", {"fields": ('order_status', 'shipping_address', 'phone', 'total', 'user',)}),
         ("Payment Information", {"fields": ('payment', 'payment_request_id', 'payment_id', 'payment_status')}),
     )
 
-    inlines = [Order_Item_Configuration]
-
-    # pagination in admin site
-    list_per_page = 10
-
-    def payment_request_id(self, obj):
+    def payment_request_id(self, obj: Order) -> Optional[str]:
         try:
             payment_request_id = obj.payment_set.all()[0].payment_request_id
         except:
             payment_request_id = None
+
         if (payment_request_id is None and payment_request_id == ""):
             return "Payment request Id is not available"
         else:
             return payment_request_id
 
-    def payment_status(self, obj):
+    def payment_status(self, obj: Order) -> str:
         try:
             status = obj.payment_set.all()[0].payment_status
         except:
             status = "Failed"
         return status
 
-    def payment_id(self, obj):
+    def payment_id(self, obj: Order) -> Optional[str]:
         try:
             payment_id = obj.payment_set.all()[0].payment_id
         except:
@@ -116,7 +108,7 @@ class Order_Configuration(admin.ModelAdmin):
         else:
             return payment_id
 
-    def payment(self, obj):
+    def payment(self, obj: Order) -> str:
         try:
             payment_id = obj.payment_set.all()[0].id
         except:
@@ -126,16 +118,16 @@ class Order_Configuration(admin.ModelAdmin):
 
 class WebsiteDetail_configurations(admin.ModelAdmin):
     model = WebsiteDetail
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request, obj: Optional[WebsiteDetail]=None) -> bool:
         return False
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request, obj: Optional[WebsiteDetail]=None):
         return False
 
 class About_Configurations(admin.ModelAdmin):
     mdoel = About
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(self, request, obj: Optional[About]=None) -> bool:
         return False
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request, obj: Optional[About]=None) -> bool:
         return False
 
 

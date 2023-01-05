@@ -1,10 +1,10 @@
+from typing import Tuple
 from django.db import models
-from django.contrib.auth.models import User
 from store.models.cloth import Cloth
 
 
 class Size_Variant(models.Model):
-    SIZES = (
+    SIZES: Tuple = (
         ('S',"Small"),
         ('M',"Medium"),
         ('L',"Large"),

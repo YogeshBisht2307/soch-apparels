@@ -1,17 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+from typing import Tuple
 from store.models.cloth import Cloth
 from store.models.size import Size_Variant
+from django.contrib.auth.models import User
 
 
 class Order(models.Model):
-    orderStatus = (
+    orderStatus: Tuple = (
         ('PENDING', "Pending"),
         ('PLACED', "Placed"),
         ('CANCELED', "Canceled"),
         ('COMPLETE', "Completed"),
     )
-    method = (
+    method: Tuple = (
         ('COD', "COD"),
         ('ONLINE', "Online")
     )
@@ -24,7 +25,7 @@ class Order(models.Model):
     total = models.IntegerField(null=False)
     date = models.DateTimeField(null=False, auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.user.username
 
 
@@ -36,5 +37,5 @@ class Order_Item(models.Model):
     price = models.IntegerField(null=False)
     date = models.DateTimeField(null=False, auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.order.user.username

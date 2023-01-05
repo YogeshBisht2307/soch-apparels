@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from store.models.order import Order
 
 class Payment(models.Model):
@@ -9,5 +8,5 @@ class Payment(models.Model):
     payment_id = models.CharField(max_length=100)
     payment_request_id = models.CharField(unique= True,null = False, max_length=50)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.order.user.username

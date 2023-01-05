@@ -1,11 +1,6 @@
 from math import floor
-from typing import List, Dict, Optional
-
+from typing import Dict
 from store.models import Cloth
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.shortcuts import redirect
-from store.models import Size_Variant
 from django.db.models.query import QuerySet
 from django.views.generic.base import TemplateView
 

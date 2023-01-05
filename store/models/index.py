@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class WebsiteDetail(models.Model):
     website_name = models.CharField(max_length=50)
@@ -18,6 +17,7 @@ class WebsiteDetail(models.Model):
     mobile_1 = models.CharField(max_length=10)
     mobile_2 = models.CharField(max_length=10)
     city = models.CharField(max_length=20)
-    def __str__(self):
+
+    def __str__(self) -> str:
         return self.website_name
 

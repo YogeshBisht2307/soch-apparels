@@ -1,7 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -13,14 +13,14 @@ class CustomerCreationForm(UserCreationForm):
     username = forms.EmailField(label="Email", required=True)
     first_name = forms.CharField(label="Name", required=True)
 
-    def clean_first_name(self):
+    def clean_first_name(self) -> str:
         data = self.cleaned_data.get("first_name")
         if len(data.strip()) < 4:
             raise ValidationError("First Name must be 4 char long")
         return data.strip()
 
     class Meta:
-        model = User  # import User from auth
+        model = User
         fields = ['username', 'first_name']
 
 

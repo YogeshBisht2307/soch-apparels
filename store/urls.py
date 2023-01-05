@@ -1,9 +1,9 @@
+from store.views import *
+from typing import List
 from django.urls import path
 from django.contrib import admin
-from store.views import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from typing import List
 
 admin.site.site_title = "Welcome to SochApparels Admin DashBoard"
 admin.site.index_title = "Welcome to SochApparels Portal"

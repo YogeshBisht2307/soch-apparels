@@ -2,7 +2,7 @@ from typing import Dict
 from store.models.about import About
 from django.http import HttpResponse
 from django.views.generic.base import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
 
 

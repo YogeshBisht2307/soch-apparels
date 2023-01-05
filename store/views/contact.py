@@ -1,11 +1,10 @@
 import os
-from math import floor
 from store.models import Contact
+from django.shortcuts import render
 from django.http import HttpResponse
 from typing import Optional, Tuple, Dict
 from django.views.generic.base import View
 from django.core.mail import send_mass_mail
-from django.shortcuts import render, redirect
 from SochApparels.settings import EMAIL_HOST_USER
 from django.core.handlers.wsgi import WSGIRequest
 

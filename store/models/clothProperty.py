@@ -1,15 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class clothProperty(models.Model):
     name = models.CharField(max_length=50)
     slug = models.CharField(max_length=100, unique= True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     class Meta :
-        abstract = True # so that there will be no class for clothProperty class
+        abstract = True # This class will not reflect into Table
+
+
 class Occasion(clothProperty):
     pass
 

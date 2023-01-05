@@ -1,8 +1,5 @@
 import razorpay
-from math import floor
-from django.template import loader
-from django.core.mail import send_mail
-from typing import Dict, List, Optional
+from SochApparels.settings import logger
 from django.views.generic.base import View
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, response
@@ -11,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from store.models import Cart, Order, Payment
 from SochApparels.settings import KEY_ID, KEY_SECRET
-from SochApparels.settings import EMAIL_HOST_USER
 
 
 class PaymentFailed(View):
@@ -35,9 +31,11 @@ def validate_payment(request: WSGIRequest) -> response.HttpResponseRedirect:
     try:
         payment_status: bool = client.utility.verify_payment_signature(payment_info)
         if not payment_status:
+            logger.error("Pyament failed with status %s", str(payment_status))
             request.session['buy']= []
             return redirect("PaymentFailed")
-    except Exception:
+    except Exception as error:
+        logger.error(str(error))
         request.session['buy']= []
         return redirect("PaymentFailed")
 

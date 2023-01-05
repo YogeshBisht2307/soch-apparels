@@ -16,7 +16,7 @@ SECRET_KEY: str = os.environ['APPLICATION_SECRET_KEY']
 
 DEBUG: bool = True if os.environ['STAGE'].upper() == 'DEV' else False
 
-ALLOWED_HOSTS: List = []
+ALLOWED_HOSTS: List = [ '*' ]
 
 INSTALLED_APPS: List = [
     'store',

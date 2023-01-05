@@ -12,7 +12,6 @@ from django.core.mail import send_mail
 from SochApparels.settings import EMAIL_HOST_USER
 
 
-
 class CancelOrderView(View):
     def get(self, request: WSGIRequest) -> response.HttpResponseRedirect:
         user = request.user

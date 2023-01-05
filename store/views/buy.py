@@ -1,9 +1,9 @@
-from typing import Dict, List
+from typing import List
 from django.views.generic.base import View
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, response
+from django.shortcuts import redirect
+from django.http import response
 from django.core.handlers.wsgi import WSGIRequest
-from store.models import Cloth, Size_Variant
+from store.models import Cloth
 
 
 class BuyView(View):

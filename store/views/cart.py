@@ -1,6 +1,6 @@
 from typing import List, Dict
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, response
+from django.shortcuts import redirect
+from django.http import response
 from django.core.handlers.wsgi import WSGIRequest
 from store.models import Cloth, Size_Variant, Cart
 from django.views.generic.base import View, TemplateView

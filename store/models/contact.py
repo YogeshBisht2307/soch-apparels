@@ -6,5 +6,5 @@ class Contact(models.Model):
     subject = models.CharField(max_length=100)
     message = models.CharField(max_length=500)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.email

@@ -8,6 +8,5 @@ class About(models.Model):
     link = models.CharField(max_length=50)
     link_text = models.CharField(max_length=50)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
-

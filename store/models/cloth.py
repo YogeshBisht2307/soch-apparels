@@ -17,5 +17,5 @@ class Cloth(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.cloth_name
