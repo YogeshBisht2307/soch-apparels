@@ -29,3 +29,8 @@ Single Vendor e-commerce store with razorpay payment gateway integration. Custom
 
 **Server:** Python, Django
 
+## Test Admin
+
+**Username:** admin
+**Password:** data@123
+

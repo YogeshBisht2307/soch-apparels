@@ -6,9 +6,9 @@ from typing import List, Dict
 logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger()
 
-load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 KEY_ID: str = os.environ['RAZORPAY_APP_ID']
 KEY_SECRET: str = os.environ['RAZORPAY_SECRET_ID']
@@ -64,23 +64,26 @@ WSGI_APPLICATION: str = 'SochApparels.wsgi.application'
 
 # Database
 
-# DATABASES: Dict = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
-DATABASES: Dict = {
-    'default': {
-        'ENGINE'  : 'django.db.backends.mysql', 
-        'NAME'    : os.environ['DATABASE_NAME'],
-        'USER'    : os.environ['DATABASE_USERNAME'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
-        'HOST'    : os.environ['DATABASE_HOST'],
-        'PORT'    : '',
+if not DEBUG:
+    DATABASES: Dict = {
+        'default': {
+            'ENGINE'  : 'django.db.backends.mysql', 
+            'NAME'    : os.environ['DATABASE_NAME'],
+            'USER'    : os.environ['DATABASE_USERNAME'],
+            'PASSWORD': os.environ['DATABASE_PASSWORD'],
+            'HOST'    : os.environ['DATABASE_HOST'],
+            'PORT'    : '',
+        }
     }
-}
+else:
+    DATABASES: Dict = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
 
 
 # Password validation
@@ -112,7 +115,6 @@ USE_TZ: bool = True
 STATIC_URL: str = '/static/'
 
 # Media URL
-print(BASE_DIR)
 MEDIA_ROOT: str = BASE_DIR
 MEDIA_URL: str = '/upload/images/media/'
 
