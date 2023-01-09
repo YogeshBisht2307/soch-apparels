@@ -1,7 +1,7 @@
 
 # SochApparels
 
-Single Vendor e-commerce store with razorpay payment gateway integration. Customers can browse and purchase products using their computer or mobile device.
+Single Vendor e-commerce store with razorpay payment gateway integration. Customers can browse and purchase products using their computer or mobile device. (http://sochapparels.pythonanywhere.com/)
 
 
 ## Screenshots
